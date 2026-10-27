@@ -1,0 +1,41 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.github.mikrop.intellijccmodelswitch</id>
+    <name>Claude Code Model Switch</name>
+    <vendor url="https://github.com/mikrop/intellij-cc-model-switch">mikrop</vendor>
+    <description><![CDATA[
+        <p>Switch the Claude Code environment between Anthropic-compatible API providers and models from the status bar.</p>
+        <ul>
+            <li>Presets (base URL, models, API token) are written into the <code>env</code> section of the Claude Code <code>settings.json</code>.</li>
+            <li>API tokens are kept in the IDE password safe, not in the preset file.</li>
+            <li>Presets live in <code>~/.claude/envs.json</code> and are shared with the VS Code extension.</li>
+        </ul>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <statusBarWidgetFactory id="ccModelSwitch.statusBar" implementation="com.github.mikrop.intellijccmodelswitch.ModelSwitchWidgetFactory"/>
+        <postStartupActivity implementation="com.github.mikrop.intellijccmodelswitch.RefreshOnStartup"/>
+        <notificationGroup id="CC Model Switch" displayType="BALLOON"/>
+    </extensions>
+
+    <applicationListeners>
+        <listener class="com.github.mikrop.intellijccmodelswitch.RefreshOnActivation"
+                  topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+    </applicationListeners>
+
+    <actions>
+        <group id="ccModelSwitch.menu" text="Claude Code Model Switch" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action id="ccModelSwitch.selectEnv" class="com.github.mikrop.intellijccmodelswitch.SwitchPresetAction"
+                    text="Switch Claude Code Environment" description="Switch the Claude Code preset"/>
+            <action id="ccModelSwitch.setToken" class="com.github.mikrop.intellijccmodelswitch.SetTokenAction"
+                    text="Set API Token" description="Store or remove the API token of a preset"/>
+            <action id="ccModelSwitch.editEnvs" class="com.github.mikrop.intellijccmodelswitch.EditEnvsAction"
+                    text="Edit Environment Presets" description="Edit ~/.claude/envs.json"/>
+            <action id="ccModelSwitch.editSettings" class="com.github.mikrop.intellijccmodelswitch.EditSettingsAction"
+                    text="Edit Claude Code settings.json" description="Edit the Claude Code settings.json"/>
+        </group>
+    </actions>
+</idea-plugin>

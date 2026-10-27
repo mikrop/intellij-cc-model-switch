@@ -1,0 +1,9 @@
+.DS_Store
+.gradle
+.idea
+.intellijPlatform
+.kotlin
+build
+
+# Local build logs
+*.log
